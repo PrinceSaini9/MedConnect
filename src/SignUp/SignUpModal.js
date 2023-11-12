@@ -19,11 +19,25 @@ const SignUpModal = ({ open, onClose, onSignInClick }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isDoctor, setIsDoctor] = useState(false);
 
-  const handleSignUp = () => {
-    // Implement your sign-up logic here
+  const handleSignUp = async() => {
+    // Implementing sign-up logic here
     console.log('Signing up with:', { firstName, lastName, email, password, confirmPassword, isDoctor });
-
-    // Close the modal after sign-up
+    const data = { firstName, lastName, email, password, isDoctor };
+    await fetch('http://localhost:5000/api/post', {
+      method: 'POST',
+      mode:'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(d=>{
+      console.log(d);
+    })
+    .catch(e=>{
+      console.log(e);
+    })
+    
     onClose();
   };
 

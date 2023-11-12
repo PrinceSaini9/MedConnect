@@ -8,12 +8,13 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import HomeIcon from '@mui/icons-material/Home';
 import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 import EventIcon from '@mui/icons-material/Event';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 
 
-const Header = ({ onSignInClick }) => {
+const Header = ({ onSignInClick, isAuth ,handleLogOut}) => {
   return (
     <AppBar position="static" className="bg-success">
       <Toolbar>
@@ -25,11 +26,22 @@ const Header = ({ onSignInClick }) => {
             <HomeIcon />
           </Button>
         </Tooltip>
-        <Tooltip title="Sign In" arrow>
+        {
+          !isAuth ?(
+            <Tooltip title="Sign In" arrow>
           <Button onClick ={onSignInClick} component={Link}  color="inherit">
             <LoginIcon></LoginIcon>
           </Button>
         </Tooltip>
+          ):(
+            <Tooltip title="Log Out" arrow>
+          <Button onClick ={handleLogOut} component={Link}  color="inherit">
+            <LogoutIcon></LogoutIcon>
+          </Button>
+        </Tooltip>
+          )
+        }
+        
         <Tooltip title="Your Profile" arrow>
           <Button component={Link} to="/profile" color="inherit">
             <AccountCircleIcon />

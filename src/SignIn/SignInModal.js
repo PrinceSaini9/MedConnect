@@ -9,16 +9,47 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link'; 
 
-const SignInModal = ({ open, onClose ,onSignUpClick}) => {
-  const [username, setUsername] = useState('');
+const SignInModal = ({ open, onClose ,onSignUpClick,setAuth,setDoctor,set}) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignIn = () => {
-    // Implement your sign-in logic here
-    console.log('Signing in with:', { username, password });
+  const handleSignIn = async() => {
+    // Implemeting sign-in logic here
+    console.log('Signing in with:', { email, password });
 
-    // Close the modal after sign-in
-    onClose();
+    try {
+      const response = await fetch('http://localhost:5000/api/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // function to handle successful sign-in
+        handleSuccessfulSignIn(data);
+        onClose(); 
+      } else {
+        // Handle authentication failure
+        console.error('Sign-in failed');
+      }
+    } catch (error) {
+      console.error('Error signing in:', error.message);
+    }
+
+  };
+
+  const handleSuccessfulSignIn = (userData) => {
+    localStorage.setItem('authToken', userData.token);
+    setAuth(true);
+    setDoctor(userData.isDoctor);
+    set(userData.email);
+    console.log('User signed in successfully:', userData);
   };
 
   return (
@@ -26,12 +57,12 @@ const SignInModal = ({ open, onClose ,onSignUpClick}) => {
       <DialogTitle>Sign In</DialogTitle>
       <DialogContent>
         <TextField
-          label="Username"
+          label="Email"
           variant="outlined"
           fullWidth
           margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           label="Password"
